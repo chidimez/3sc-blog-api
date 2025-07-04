@@ -85,15 +85,9 @@ class PostController extends Controller
 
         $posts = $query->latest('published_at')->paginate($perPage);
 
-        return PostResource::collection($posts)
-            ->additional([
-                'meta' => [
-                    'current_page' => $posts->currentPage(),
-                    'last_page' => $posts->lastPage(),
-                    'per_page' => $posts->perPage(),
-                    'total' => $posts->total(),
-                ],
-            ]);
+       return response()->json(
+        PostResource::collection($posts)->response()->getData(true)
+    );
     }
 
 
