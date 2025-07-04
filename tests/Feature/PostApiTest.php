@@ -34,7 +34,7 @@ class PostApiTest extends TestCase
      *
      * @return void
      */
-    public function anyone_can_view_paginated_posts()
+    public function testAnyoneCanViewPaginatedPosts()
     {
         $response = $this->getJson('/api/posts?per_page=2&page=1');
 
@@ -69,7 +69,7 @@ class PostApiTest extends TestCase
      *
      * @return void
      */
-    public function anyone_can_view_a_single_post()
+    public function testAnyoneCanViewASinglePost()
     {
         $post = Post::first();
 
@@ -89,7 +89,7 @@ class PostApiTest extends TestCase
      *
      * @return void
      */
-    public function unauthenticated_user_cannot_create_post()
+    public function testUnauthenticatedUserCannotCreatePost()
     {
         $response = $this->postJson('/api/posts', [
             'title' => 'Test Post',
@@ -109,7 +109,7 @@ class PostApiTest extends TestCase
      *
      * @return void
      */
-    public function authenticated_user_can_create_post()
+    public function testAuthenticatedUserCanCreatePost()
     {
         $postData = [
             'title' => 'New Post',
@@ -136,7 +136,7 @@ class PostApiTest extends TestCase
      *
      * @return void
      */
-    public function authenticated_user_can_update_post()
+    public function testAuthenticatedUserCanUpdatePost()
     {
         $post = Post::factory()->create(['published_at' => now()->subDay()]);
 
@@ -160,7 +160,7 @@ class PostApiTest extends TestCase
      *
      * @return void
      */
-    public function authenticated_user_can_delete_post()
+    public function testAuthenticatedUserCanDeletePost()
     {
         $post = Post::factory()->create(['published_at' => now()->subDay()]);
 

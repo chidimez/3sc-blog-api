@@ -1,61 +1,119 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# 3SC Blog API
 
-## About Laravel
+A Laravel-based RESTful API for managing blog posts, featuring authentication, post scheduling, and Swagger documentation.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Setup & Installation
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 1. Clone the repository
 
-## Learning Laravel
+```bash
+git clone https://github.com/chidimez/3sc-blog-api.git
+cd 3sc-blog-api
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Install dependencies
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+composer install
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 3. Setup environment variables
 
-## Laravel Sponsors
+Copy the example environment file:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+```bash
+cp .env.example .env
+```
 
-### Premium Partners
+Edit `.env` to configure your database connection.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+Recommendation: Use SQLite for simplicity in testing:
 
-## Contributing
+```
+DB_CONNECTION=sqlite
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Create the SQLite database file:
 
-## Code of Conduct
+```bash
+touch database/database.sqlite
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Generate application key
 
-## Security Vulnerabilities
+```bash
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### 5. Setup database
 
-## License
+You have two options:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Empty database (fresh migrations only):
+
+```bash
+php artisan migrate
+```
+
+- With seed data (creates test users and sample posts):
+
+```bash
+php artisan migrate --seed
+```
+
+### 6. Serve the application
+
+```bash
+php artisan serve
+```
+
+By default, the app runs at [http://localhost:8000](http://localhost:8000).
+
+---
+
+## Running Tests
+
+Run all tests with:
+
+```bash
+php artisan test
+```
+
+To run only the PostApiTest:
+
+```bash
+php artisan test --filter=PostApiTest
+```
+
+---
+
+## Scheduled Posts
+
+To manually publish scheduled posts:
+
+```bash
+php artisan posts:publish-scheduled-posts
+```
+
+To run the scheduler worker:
+
+```bash
+php artisan schedule:work
+```
+
+---
+
+## Notes & Assumptions
+
+- **Authentication:** Uses Laravel Sanctum for token-based authentication. Protected routes require `Authorization: Bearer {token}` header.
+- **Scheduling:** Posts with `scheduled_at` set in the future are unpublished until the scheduler runs and sets `published_at`.
+- **Pagination:** Posts listing supports `page` and `per_page` query parameters.
+- **Swagger docs:** Available at `/api/documentation` when app is running.
+- **Database:** SQLite used for quick setup and testing.
+- **Testing:** Feature tests cover CRUD operations.
+- **Environment:** Requires PHP 8+, Composer, and Laravel 12.
+
+---
